@@ -1,4 +1,4 @@
-import clsx from "clsx";
+// import clsx from "clsx";
 import { Crypto } from "../types/crypto";
 
 function formatCurrency(num: number) {
