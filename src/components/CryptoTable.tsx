@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import CryptoRow from "./CryptoRow";
 import { motion } from "framer-motion";
-import "./../styles/tableStyles.css";
+// import "./../styles/tableStyles.css";
 import { Crypto } from "../types/crypto";
 
 type FormData = {
   id: string;
+  // logo: string;
   name: string;
   symbol: string;
   price: string;
@@ -31,6 +32,7 @@ export default function CryptoTable({ cryptoTableData , onDelete }: CryptoTableP
   const [cryptoData, setCryptoData] = useState<Crypto[]>([]); // State for cryptocurrencies
   const [formData, setFormData] = useState<FormData>({
     id: "",
+    // logo: "",
     name: "",
     symbol: "",
     price: "",
@@ -79,6 +81,7 @@ export default function CryptoTable({ cryptoTableData , onDelete }: CryptoTableP
     const newCrypto = {
       ...formData,
       id: cryptoData.length + 1, // Auto-increment ID
+      // logo: "/logo.png", // Default logo
       price: parseFloat(formData.price),
       change1h: parseFloat(formData.change1h),
       change24h: parseFloat(formData.change24h),
@@ -91,12 +94,12 @@ export default function CryptoTable({ cryptoTableData , onDelete }: CryptoTableP
       launchYear: parseInt(formData.launchYear, 10),
       rank: parseInt(formData.rank, 10),
       algorithm: formData.algorithm,
-      logo: "/logo.png", // Default logo
       chart: "/chart.png", // Default chart
     };
     setCryptoData([...cryptoData, newCrypto]); // Add new crypto to the table
     setFormData({
       id: "",
+      // logo: "",
       name: "",
       symbol: "",
       price: "",
@@ -263,7 +266,7 @@ export default function CryptoTable({ cryptoTableData , onDelete }: CryptoTableP
         <thead>
           <tr>
             <th>#</th>
-            <th>Logo</th>
+            {/* <th>Logo</th> */}
             <th>Name</th>
             <th>Symbol</th>
             <th>Price</th>

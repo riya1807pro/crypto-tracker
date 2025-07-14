@@ -49,14 +49,15 @@ export default function CryptoRow({
         transition={{ duration: 0.5 }}
       >
         <td>
-          <img
-            src={item.logo || "/logo.png"}
-            alt={item.symbol || "Default Logo"}
-            className="crypto-logo w-8 h-8 rounded-full hover:scale-110 transition-transform"
-          />
+          <span className="font-bold">{item.id}</span>
+        </td>
+        <td>
+        
         </td>
         <td>
           <span className="font-bold">{item.name}</span>
+        </td>
+        <td>
           <span className="ml-2 text-xs text-gray-500">{item.symbol}</span>
         </td>
         <td>{formatCurrency(item.price)}</td>
@@ -114,51 +115,7 @@ export default function CryptoRow({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-      >
-        <div className="flex items-center gap-3">
-          <img
-            src={item.logo || "/logo.png"}
-            alt={item.symbol || "Default Logo"}
-            className="crypto-logo w-10 h-10 rounded-full"
-          />
-          <div>
-            <span className="font-bold text-lg">{item.name}</span>
-            <span className="ml-2 text-xs text-gray-500">{item.symbol}</span>
-          </div>
-          <span className="ml-auto font-semibold text-xl">{formatCurrency(item.price)}</span>
-        </div>
-        <div className="flex gap-2">
-          <span className={`px-2 py-1 rounded border ${changeTag(item.change1h)} transition-colors duration-500`}>
-            1h: {item.change1h}%
-          </span>
-          <span className={`px-2 py-1 rounded border ${changeTag(item.change24h)} transition-colors duration-500`}>
-            24h: {item.change24h}%
-          </span>
-          <span className={`px-2 py-1 rounded border ${changeTag(item.change7d)} transition-colors duration-500`}>
-            7d: {item.change7d}%
-          </span>
-        </div>
-        <div className="flex flex-wrap gap-2 text-xs text-gray-600 dark:text-gray-300">
-          <span>Market Cap: {formatCurrency(item.marketCap)}</span>
-          <span>Volume: {formatCurrency(item.volume24h)}</span>
-          <span>ATH: {formatCurrency(item.ath)}</span>
-          <span>Year: {item.launchYear}</span>
-          <span>Algo: {item.algorithm || "N/A"}</span>
-          <span>Rank: {item.rank || "N/A"}</span>
-        </div>
-        <div className="w-full h-16 mt-2">
-          <CryptoChart data={chartData} />
-        </div>
-        <button
-          className="delete-button px-3 py-1 rounded bg-red-500 text-white hover:bg-red-700 transition-colors mt-2"
-          onClick={e => {
-            e.stopPropagation();
-            onDelete(item.id);
-            toast.success("Deleted!");
-          }}
-        >
-          <TrashIcon className="w-5 h-5 inline" />
-        </button>
+      > 
       </motion.div>
 
       {/* Modal for details */}

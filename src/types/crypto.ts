@@ -7,7 +7,7 @@ export interface Crypto {
   volume24h: number;
   ath: number;
   launchYear: number;
-  logo: string;
+  // logo: string;
   algorithm: string;
   rank: number;
   maxSupply?: number;
