@@ -1,17 +1,3 @@
-import autoprefixer from 'autoprefixer';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
 
-export default defineConfig({
-  plugins: [react()],
-  css: {
-    postcss: {
-      plugins: [
-        autoprefixer, // Only include autoprefixer here
-      ],
-    },
-  },
-});
-
-function defineConfig(config: { plugins: any[]; css: { postcss: { plugins: any[]; }; }; }) {
-  return config;
-}
+export default defineConfig({})

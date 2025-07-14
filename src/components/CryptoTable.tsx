@@ -1,30 +1,35 @@
 import React, { useState, useEffect } from "react";
 import CryptoRow from "./CryptoRow";
+import { motion } from "framer-motion";
 import "./../styles/tableStyles.css";
+import { Crypto } from "../types/crypto";
 
-type Crypto = {
-  id: number;
+type FormData = {
+  id: string;
   name: string;
   symbol: string;
-  price: number;
-  change1h: number;
-  change24h: number;
-  change7d: number;
-  marketCap: number;
-  volume24h: number;
-  circulatingSupply: number;
-  maxSupply: number | undefined;
-  ath: number;
-  launchYear: number;
-  rank: number;
+  price: string;
+  change1h: string;
+  change24h: string;
+  change7d: string;
+  marketCap: string;
+  volume24h: string;
+  circulatingSupply: string;
+  maxSupply: string;
+  ath: string;
+  launchYear: string;
+  rank: string;
   algorithm: string;
-  logo: string;
-  chart: string;
 };
 
-export default function CryptoTable() {
+type CryptoTableProps = {
+  cryptoTableData: Crypto[];
+  onDelete: (id: number) => void;
+};
+
+export default function CryptoTable({ cryptoTableData , onDelete }: CryptoTableProps) {
   const [cryptoData, setCryptoData] = useState<Crypto[]>([]); // State for cryptocurrencies
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     id: "",
     name: "",
     symbol: "",
@@ -49,6 +54,8 @@ export default function CryptoTable() {
       setCryptoData(JSON.parse(storedData));
     }
   }, []);
+
+  console.log("Loaded crypto data:", cryptoTableData, onDelete); // Debugging log
 
   // Save data to local storage whenever cryptoData changes
   useEffect(() => {
@@ -113,9 +120,27 @@ export default function CryptoTable() {
     setCryptoData(updatedData);
   };
 
+  // Portfolio summary calculation
+  const totalMarketCap = cryptoData.reduce((sum, c) => sum + c.marketCap , 0);
+  const totalAssets = cryptoData.length;
+
   return (
     <div className="table-container">
-      <h1 className="text-2xl font-bold text-center my-4">Crypto Tracker</h1>
+      <h1 className="text-2xl font-bold text-center my-4">Crypto Portfolio Showcase</h1>
+      {/* Portfolio summary card */}
+      <div className="flex justify-center mb-6">
+        <div className="bg-white shadow-xl rounded-lg p-6 w-full max-w-md transition-colors duration-500">
+          <h2 className="text-lg font-semibold mb-2">Portfolio Summary</h2>
+          <div className="flex justify-between">
+            <span>Total Market Cap:</span>
+            <span className="font-bold">${totalMarketCap.toLocaleString()}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Total Assets:</span>
+            <span className="font-bold">{totalAssets}</span>
+          </div>
+        </div>
+      </div>
 
       {/* Form for user input */}
       <form className="crypto-form" onSubmit={handleFormSubmit}>
@@ -258,8 +283,16 @@ export default function CryptoTable() {
           </tr>
         </thead>
         <tbody>
-          {cryptoData.map((item) => (
-            <CryptoRow key={item.id} item={item} onDelete={handleDelete} />
+          {cryptoData.map((item, idx) => (
+            <motion.tr
+              key={item.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: idx * 0.05 }}
+              className="crypto-row hover:scale-105 hover:shadow-xl transition-transform"
+            >
+              <CryptoRow item={item} onDelete={handleDelete} />
+            </motion.tr>
           ))}
         </tbody>
       </table>

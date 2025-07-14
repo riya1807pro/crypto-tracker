@@ -1,0 +1,54 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px;
+}
+
+.crypto-card {
+  background-color: var(--card-background);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 15px;
+  width: calc(100% / 2 - 40px); /* Two cards per row on mobile */
+  transition: transform 0.2s;
+}
+
+.crypto-card:hover {
+  transform: scale(1.05);
+}
+
+.crypto-logo {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.crypto-name {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.crypto-symbol {
+  font-size: 0.9em;
+  color: gray;
+}
+
+.crypto-info {
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+@media (min-width: 600px) {
+  .crypto-card {
+    width: calc(100% / 3 - 40px); /* Three cards per row on larger screens */
+  }
+}
+
+@media (min-width: 900px) {
+  .crypto-card {
+    width: calc(100% / 4 - 40px); /* Four cards per row on even larger screens */
+  }
+}

@@ -1,51 +1,174 @@
-// import clsx from "clsx";
+import { useState } from "react";
 import { Crypto } from "../types/crypto";
+import CryptoModal from "./CryptoModal";
+import { motion } from "framer-motion";
+import CryptoChart from "./CryptoChart";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { toast } from 'react-toastify';
 
 function formatCurrency(num: number) {
   return "$" + num.toLocaleString(undefined, { maximumFractionDigits: 2 });
 }
 
-export default function CryptoRow({ item, onDelete }: { item: Crypto; onDelete: (id: number) => void }) {
-  const color = (val: number) => (val >= 0 ? "positive" : "negative");
+export default function CryptoRow({
+  item,
+  onDelete,
+  theme = "light",
+}: {
+  item: Crypto;
+  onDelete: (id: number) => void;
+  theme?: "light" | "dark";
+}) {
+  const [showModal, setShowModal] = useState(false);
+
+  const changeTag = (val: number | undefined) =>
+    typeof val !== "number"
+      ? "bg-gray-100 text-gray-700 border-gray-400"
+      : val > 0
+      ? "bg-green-100 text-green-700 border-green-400"
+      : val < 0
+      ? "bg-red-100 text-red-700 border-red-400"
+      : "bg-gray-100 text-gray-700 border-gray-400";
+
+  // Example chart data (replace with real data)
+  const chartData = item.history || [item.price, item.price * 0.98, item.price * 1.02, item.price * 1.01];
 
   return (
-    <tr className="crypto-row">
-      <td>{item.id}</td>
-      <td>
-        <img
-          src={item.logo || "/logo.png"}
-          alt={item.symbol || "Default Logo"}
-          className="crypto-logo"
-        />
-      </td>
-      <td className="crypto-name">
-        {item.name} <span className="crypto-symbol">{item.symbol}</span>
-      </td>
-      <td>{item.symbol}</td>
-      <td>{formatCurrency(item.price)}</td>
-      <td className={color(item.change1h)}>{item.change1h}%</td>
-      <td className={color(item.change24h)}>{item.change24h}%</td>
-      <td className={color(item.change7d)}>{item.change7d}%</td>
-      <td>{item.marketCap.toLocaleString()}</td>
-      <td>{item.volume24h.toLocaleString()}</td>
-      <td>{item.circulatingSupply}B</td>
-      <td>{item.maxSupply ? `${item.maxSupply}B` : "N/A"}</td>
-      <td>{formatCurrency(item.ath)}</td>
-      <td>{item.launchYear}</td>
-      <td>{item.rank || "N/A"}</td>
-      <td>{item.algorithm || "N/A"}</td>
-      <td>
-        <img
-          src={item.chart || "/chart.png"}
-          alt="Chart"
-          className="crypto-chart"
-        />
-      </td>
-      <td>
-        <button className="delete-button" onClick={() => onDelete(item.id)}>
-          Delete
+    <>
+      {/* Desktop/Table view */}
+      <motion.tr
+        className={`crypto-row hidden md:table-row hover:scale-105 hover:shadow-xl transition-transform cursor-pointer ${theme}`}
+        tabIndex={0}
+        onClick={() => setShowModal(true)}
+        onKeyDown={e => {
+          if (e.key === "Enter" || e.key === " ") setShowModal(true);
+        }}
+        aria-label={`Show details for ${item.name}`}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <td>
+          <img
+            src={item.logo || "/logo.png"}
+            alt={item.symbol || "Default Logo"}
+            className="crypto-logo w-8 h-8 rounded-full hover:scale-110 transition-transform"
+          />
+        </td>
+        <td>
+          <span className="font-bold">{item.name}</span>
+          <span className="ml-2 text-xs text-gray-500">{item.symbol}</span>
+        </td>
+        <td>{formatCurrency(item.price)}</td>
+        <td>
+          <span className={`px-2 py-1 rounded border ${changeTag(item.change1h)} transition-colors duration-500`}>
+            {item.change1h}%
+          </span>
+        </td>
+        <td>
+          <span className={`px-2 py-1 rounded border ${changeTag(item.change24h)} transition-colors duration-500`}>
+            {item.change24h ?? "N/A"}%
+          </span>
+        </td>
+        <td>
+          <span className={`px-2 py-1 rounded border ${changeTag(item.change7d)} transition-colors duration-500`}>
+            {item.change7d}%
+          </span>
+        </td>
+        <td>{formatCurrency(item.marketCap)}</td>
+        <td>{formatCurrency(item.volume24h)}</td>
+        <td>{item.circulatingSupply}B</td>
+        <td>{item.maxSupply ? `${item.maxSupply}B` : "N/A"}</td>
+        <td>{formatCurrency(item.ath)}</td>
+        <td>{item.launchYear}</td>
+        <td>{item.rank || "N/A"}</td>
+        <td>{item.algorithm || "N/A"}</td>
+        <td>
+          <div className="w-24 h-12">
+            <CryptoChart data={chartData} />
+          </div>
+        </td>
+        <td>
+          <button
+            className="delete-button px-3 py-1 rounded bg-red-500 text-white hover:bg-red-700 transition-colors"
+            onClick={e => {
+              e.stopPropagation();
+              onDelete(item.id);
+              toast.success("Deleted!");
+            }}
+          >
+            <TrashIcon className="w-5 h-5 inline" />
+          </button>
+        </td>
+      </motion.tr>
+
+      {/* Mobile/Card view */}
+      <motion.div
+        className={`crypto-card md:hidden bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 mb-4 flex flex-col gap-2 hover:scale-105 hover:shadow-xl transition-transform cursor-pointer ${theme}`}
+        tabIndex={0}
+        onClick={() => setShowModal(true)}
+        onKeyDown={e => {
+          if (e.key === "Enter" || e.key === " ") setShowModal(true);
+        }}
+        aria-label={`Show details for ${item.name}`}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="flex items-center gap-3">
+          <img
+            src={item.logo || "/logo.png"}
+            alt={item.symbol || "Default Logo"}
+            className="crypto-logo w-10 h-10 rounded-full"
+          />
+          <div>
+            <span className="font-bold text-lg">{item.name}</span>
+            <span className="ml-2 text-xs text-gray-500">{item.symbol}</span>
+          </div>
+          <span className="ml-auto font-semibold text-xl">{formatCurrency(item.price)}</span>
+        </div>
+        <div className="flex gap-2">
+          <span className={`px-2 py-1 rounded border ${changeTag(item.change1h)} transition-colors duration-500`}>
+            1h: {item.change1h}%
+          </span>
+          <span className={`px-2 py-1 rounded border ${changeTag(item.change24h)} transition-colors duration-500`}>
+            24h: {item.change24h}%
+          </span>
+          <span className={`px-2 py-1 rounded border ${changeTag(item.change7d)} transition-colors duration-500`}>
+            7d: {item.change7d}%
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-2 text-xs text-gray-600 dark:text-gray-300">
+          <span>Market Cap: {formatCurrency(item.marketCap)}</span>
+          <span>Volume: {formatCurrency(item.volume24h)}</span>
+          <span>ATH: {formatCurrency(item.ath)}</span>
+          <span>Year: {item.launchYear}</span>
+          <span>Algo: {item.algorithm || "N/A"}</span>
+          <span>Rank: {item.rank || "N/A"}</span>
+        </div>
+        <div className="w-full h-16 mt-2">
+          <CryptoChart data={chartData} />
+        </div>
+        <button
+          className="delete-button px-3 py-1 rounded bg-red-500 text-white hover:bg-red-700 transition-colors mt-2"
+          onClick={e => {
+            e.stopPropagation();
+            onDelete(item.id);
+            toast.success("Deleted!");
+          }}
+        >
+          <TrashIcon className="w-5 h-5 inline" />
         </button>
-      </td>
-    </tr>
+      </motion.div>
+
+      {/* Modal for details */}
+      {showModal && (
+        <CryptoModal
+          item={item}
+          onClose={() => setShowModal(false)}
+          theme={theme}
+        />
+      )}
+    </>
   );
 }
