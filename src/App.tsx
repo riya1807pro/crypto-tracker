@@ -32,8 +32,7 @@ export default function App() {
   return (
     <div >
       <div className="container mx-auto px-4 py-6 bg-red-500">
-        <PortfolioSummary data={filteredData} />
-        <FilterSortBar onSort={setSortKey} onFilter={setFilter} />
+        {/* <PortfolioSummary data={filteredData} /> */}
 <CryptoTable cryptoTableData={filteredData} onDelete={id => setCryptoData(cryptoData.filter(c => c.id !== id))} />
 
       </div>

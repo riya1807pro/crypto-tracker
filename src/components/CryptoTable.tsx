@@ -129,7 +129,7 @@ export default function CryptoTable({ cryptoTableData , onDelete }: CryptoTableP
 
   return (
     <div className="table-container">
-      <h1 className="text-2xl font-bold text-center my-4">Crypto Portfolio Showcase</h1>
+      <h1 className="text-2xl font-bold text-center my-4">Crypto tracker</h1>
       {/* Portfolio summary card */}
       <div className="flex justify-center mb-6">
         <div className="bg-white shadow-xl rounded-lg p-6 w-full max-w-md transition-colors duration-500">
